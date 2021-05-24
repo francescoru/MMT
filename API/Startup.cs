@@ -31,6 +31,11 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IProductRepository, ProductRepository>();
+
+            //use this for sql connection
+            services.AddDbContext<Context>(options =>
+               options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
+
             services.AddDbContext<Context>(x =>
                      x.UseMySql(_configuration.GetConnectionString("DefaultConnection")));
             services.AddControllers();

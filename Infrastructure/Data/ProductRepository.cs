@@ -45,9 +45,16 @@ namespace Infrastructure.Data
 
         public async Task<IReadOnlyList<Product>> GetProductByCategoryAsync(int categoryId)
         {
-            var docs1 = _context.Products.FromSqlRaw("CALL productByCategoryId(@p0)", categoryId).ToListAsync();
+            //try and return one of those 3 values to make it work with sql
+            var callSqlProcedure = _context.Products.FromSqlRaw("productByCategoryId @p0", categoryId).ToListAsync();
 
-            return  await docs1;
+            var callSqlProcedure2 = _context.Products.FromSqlRaw("EXEC productByCategoryId @p0", categoryId).ToListAsync();
+            
+            var callSqlProcedure3 = _context.Products.FromSqlRaw("EXECUTE productByCategoryId @p0", categoryId).ToListAsync();
+
+            var mySQLProcedure = _context.Products.FromSqlRaw("CALL productByCategoryId(@p0)", categoryId).ToListAsync();
+
+            return  await mySQLProcedure;
         }
     }
 }
